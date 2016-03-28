@@ -33,9 +33,9 @@ def main():
     grassdata = os.path.normpath("C:/Users/Brendan/Documents/grassdata/") # specify the full filepath filename of your grassdata directory
 
     # set rendering directories
-    render_dir = os.path.normpath("tangible_water_flow_results/analysis/")
+    render_dir = os.path.normpath("results/analysis/")
     render = os.path.join(grassdata,render_dir)
-    series_dir = os.path.normpath("tangible_water_flow_results/statistical_analysis/")
+    series_dir = os.path.normpath("results/statistical_analysis/")
     series = os.path.join(grassdata,series_dir)
 
     # set paramters
