@@ -39,7 +39,7 @@ def main():
     region = "dem@PERMANENT"
 
     # list scanned DEMs for experiment 1
-    dems = gscript.list_grouped('rast', pattern='*dem_1')['reinterpolation']
+    dems = gscript.list_grouped('rast', pattern='*dem_1')['data']
 
     # iterate through scanned DEMs
     for dem in dems:

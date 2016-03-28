@@ -33,9 +33,9 @@ def main():
     grassdata = os.path.normpath("C:/Users/Brendan/Documents/grassdata/") # specify the full filepath filename of your grassdata directory
 
     # set rendering directories
-    render_dir = os.path.normpath("results/flow/")
+    render_dir = os.path.normpath("tangible_water_flow_results/analysis/")
     render = os.path.join(grassdata,render_dir)
-    series_dir = os.path.normpath("results/flow_series/")
+    series_dir = os.path.normpath("tangible_water_flow_results/statistical_analysis/")
     series = os.path.join(grassdata,series_dir)
 
     # set paramters
@@ -48,7 +48,7 @@ def main():
 
 
     # list scanned DEMs
-    dems = gscript.list_grouped('rast', pattern='*dem*')['flow']
+    dems = gscript.list_grouped('rast', pattern='*dem*')['analysis']
 
     # iterate through scanned DEMs
     for dem in dems:
@@ -60,7 +60,6 @@ def main():
         depth=dem.replace("dem","depth")
         before="depth@PERMANENT"
         after=depth
-        regression=dem.replace("dem","regress")
         difference=dem.replace("dem","diff")
         depressions=dem.replace("dem","depressions")
 
@@ -110,7 +109,7 @@ def main():
         gscript.run_command('d.mon', stop=driver)
 
     # series
-    for i in range(5,8,2):
+    for i in range(1,3):
 
         # variables
         region="dem@PERMANENT"
@@ -119,7 +118,7 @@ def main():
         depressions_pattern = "*depressions_"+str(i)
         reference_contour = "contour@PERMANENT"
         reference_relief = "relief@PERMANENT"
-        reference_depth = "depth@PERMANENT"
+        #reference_depth = "depth@PERMANENT"
         mean_diff = "mean_diff_"+str(i)
         max_diff = "max_diff_"+str(i)
         mean_depth = "mean_depth_"+str(i)
@@ -137,13 +136,13 @@ def main():
         height=int(info.rows)
 
         # list depths
-        depth_list = gscript.list_grouped('rast', pattern=depth_pattern)['flow']
+        depth_list = gscript.list_grouped('rast', pattern=depth_pattern)['analysis']
 
         # list of differences of depths
-        diff_list = gscript.list_grouped('rast', pattern=diff_pattern)['flow']
+        diff_list = gscript.list_grouped('rast', pattern=diff_pattern)['analysis']
 
         # list depths
-        depressions_list = gscript.list_grouped('rast', pattern=depressions_pattern)['flow']
+        depressions_list = gscript.list_grouped('rast', pattern=depressions_pattern)['analysis']
 
         # compute the mean of depths
         gscript.run_command('r.series', input=depth_list, output=mean_depth, method="average", overwrite=overwrite)
