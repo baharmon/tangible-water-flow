@@ -14,13 +14,47 @@ import sys
 import atexit
 import grass.script as gscript
 from grass.exceptions import CalledModuleError
+import matplotlib.pyplot as plt
 
 # set graphics driver
 driver = "cairo"
 
+# temporary region
+gscript.use_temp_region()
+
+# set grass data directory
+grassdata = os.path.normpath("C:/Users/Brendan/Documents/grassdata/") # specify the full filepath filename of your grassdata directory
+
+# set rendering directories
+render_dir = os.path.normpath("results/analysis/")
+render = os.path.join(grassdata,render_dir)
+series_dir = os.path.normpath("results/summary/")
+series = os.path.join(grassdata,series_dir)
+
+# set paramters
+overwrite = True
+
+# set variables
+experiments = 2
+iterator = experiments+1
+
+# set color rules
+depressions_colors = '0% aqua\n100% blue'
+depth_colors = '0 255:255:255\n0.001 255:255:0\n0.05 0:255:255\n0.1 0:127:255\n0.5 0:0:255\n100% 0:0:0'
+
+# set region
+region="dem@PERMANENT"
+gscript.run_command('g.region', rast=region, res=3)
+
+# driver settings
+info = gscript.parse_command('r.info', map=region, flags='g')
+width=int(info.cols)+int(info.cols)/2
+height=int(info.rows)
+
 def main():
     #analyze_models()
-    analyze_series()
+    cells, distance = analyze_series()
+    plot_series(cells, distance)
     atexit.register(cleanup)
     sys.exit(0)
 
@@ -35,31 +69,13 @@ def cleanup():
 def analyze_models():
     """Compute the relief, contours, water flow, difference in water flow, depressions, and concentrated flow for each model in each experiment"""
 
-    # temporary region
-    gscript.use_temp_region()
-
-    # set grass data directory
-    grassdata = os.path.normpath("C:/Users/Brendan/Documents/grassdata/") # specify the full filepath filename of your grassdata directory
-
-    # set rendering directories
-    render_dir = os.path.normpath("results/analysis/")
-    render = os.path.join(grassdata,render_dir)
-
-    # set paramters
-    overwrite = True
-
-    # set color rules
-    depressions_colors = '0% aqua\n100% blue'
-
     # list scanned DEMs
     dems = gscript.list_grouped('rast', pattern='*dem*')['analysis']
-
 
     # iterate through scanned DEMs
     for dem in dems:
 
         # variables
-        region="dem@PERMANENT"
         relief=dem.replace("dem","relief")
         contour=dem.replace("dem","contour")
         depth=dem.replace("dem","depth")
@@ -67,14 +83,6 @@ def analyze_models():
         after=depth
         difference=dem.replace("dem","diff")
         depressions=dem.replace("dem","depressions")
-
-        # set region
-        gscript.run_command('g.region', rast=region, res=3)
-
-        # driver settings
-        info = gscript.parse_command('r.info', map=dem, flags='g')
-        width=int(info.cols)+int(info.cols)/2
-        height=int(info.rows)
 
         # compute relief
         gscript.run_command('r.relief', input=dem, output=relief, altitude=90, azimuth=45, zscale=1, units="intl", overwrite=overwrite)
@@ -115,32 +123,18 @@ def analyze_models():
 def analyze_series():
     """compute the difference, water flow, depressions, and concentrated flow for each series of models"""
 
-    # temporary region
-    gscript.use_temp_region()
+    cells = []
+    distance = []
 
-    # set grass data directory
-    grassdata = os.path.normpath("C:/Users/Brendan/Documents/grassdata/") # specify the full filepath filename of your grassdata directory
+    # compute number of cells with depressions in the reference
+    univar_ref_cells = gscript.parse_command('r.univar', map="depressions@PERMANENT", separator='newline', flags='g')
+    reference_cells =  float(univar_ref_cells['sum'])
+    cells.append(reference_cells)
+    print 'cells with depressions in reference: ' + str(reference_cells)
 
-    # set rendering directories
-    series_dir = os.path.normpath("results/summary/")
-    series = os.path.join(grassdata,series_dir)
-
-    # set paramters
-    overwrite = True
-    
-    # variables
-    experiments = 2
-    iterator = experiments+1
-
-    # set color rules
-    depressions_colors = '0% aqua\n100% blue'
-    depth_colors = '0 255:255:255\n0.001 255:255:0\n0.05 0:255:255\n0.1 0:127:255\n0.5 0:0:255\n100% 0:0:0'
-
-    # series
     for i in range(1,iterator):
 
         # variables
-        region="dem@PERMANENT"
         diff_pattern = "*diff_"+str(i)
         depth_pattern = "*depth_"+str(i)
         depressions_pattern = "*depressions_"+str(i)
@@ -159,14 +153,6 @@ def analyze_series():
         reference_points="concentrated_points"
         flow_distance="flow_distance_"+str(i)
         copied_points = 'copied_points_'+str(i)
-
-        # set region
-        gscript.run_command('g.region', rast=region, res=3)
-
-        # driver settings
-        info = gscript.parse_command('r.info', map=region, flags='g')
-        width=int(info.cols)+int(info.cols)/2
-        height=int(info.rows)
 
         # list depths
         depth_list = gscript.list_grouped('rast', pattern=depth_pattern)['analysis']
@@ -243,34 +229,69 @@ def analyze_series():
         # extract concentrated flow
         gscript.run_command('r.mapcalc', expression='{concentrated_flow} = if({mean_depth}>=0.05,{mean_depth},null())'.format(mean_depth=mean_depth,concentrated_flow=concentrated_flow), overwrite=overwrite)
         gscript.write_command('r.colors', map=concentrated_flow, rules='-', stdin=depth_colors)
-        gscript.run_command('r.random', input=concentrated_flow, npoints='10%', vector=concentrated_points, overwrite=overwrite)
+        gscript.run_command('r.random', input=concentrated_flow, npoints='100%', vector=concentrated_points, overwrite=overwrite)
         
         # compute distance from reference
         gscript.run_command('g.copy', vector=[reference_points+'@PERMANENT',copied_points], overwrite=overwrite)
         gscript.run_command('v.db.addcolumn', map=copied_points, columns='distance INTEGER', overwrite=overwrite)
         gscript.run_command('v.distance', from_=copied_points, to=concentrated_points, upload='dist', column='distance', output=flow_distance, separator='newline', overwrite=overwrite)
-        univar = gscript.read_command('v.univar', map=copied_points, column='distance', overwrite=overwrite)
-        print 'experiment'+str(i)     
-        print univar
-
-
-#        distance = gscript.parse_command('v.distance', from_=reference_points, to=concentrated_points, upload='dist', output=flow_distance, separator='newline', flags='p', overwrite=overwrite)
-#        print 'distance: ' + str(distance)
+        univar_distance = gscript.parse_command('v.db.univar', map=copied_points, column='distance', flags='g', overwrite=overwrite)
+        dist = float(univar_distance['sum'])
+        distance.append(dist)
+        print 'sum of min distance in experiment'+str(i)+': ' + str(dist)
   
         # render
         gscript.run_command('d.mon', start=driver, width=width*2, height=height*2, output=os.path.join(series,concentrated_flow+".png"), overwrite=overwrite)
         gscript.run_command('d.shade', shade=reference_relief, color=mean_diff, brighten=75)
+        gscript.run_command('d.vect', map=reference_contour, display='shape')
         gscript.run_command('d.vect', map=reference_points, display='shape', color='blue')
         gscript.run_command('d.vect', map=concentrated_points, display='shape', color='red')
         gscript.run_command('d.vect', map=flow_distance, display='shape')
-        gscript.run_command('d.legend', raster=mean_diff, fontsize=9, at=(10,90,1,4))
+        #gscript.run_command('d.legend', raster=mean_diff, fontsize=9, at=(10,90,1,4))
         gscript.run_command('d.mon', stop=driver)
 
         # compute number of cells with depressions
         univar = gscript.parse_command('r.univar', map=depressions_list, separator='newline', flags='g')
         depression_cells =  float(univar['sum'])
-        print 'experiment'+str(i)
-        print 'cells with depressions: ' + str(depression_cells)
+        cells.append(depression_cells)
+        print 'cells with depressions in experiment'+str(i)+': ' + str(depression_cells)
+
+    return cells, distance
+
+def plot_series(cells, distance):
+    """plot the number cells with depressions and the length between mean concentrated flow points for each experiment"""
+
+    depression_plot = os.path.join(series,"depression_cells.png")
+    distance_plot = os.path.join(series,"distance.png")
+
+    # plot depressions
+    fig = plt.figure(frameon = False)
+    fig.set_size_inches(6, 8)
+    labels = ('Reference', 'Digital', 'Tangible')
+    x= range(len(labels))
+    y = cells
+    plt.bar(x, y, color="gray", width=0.5, align='center', alpha=0.5, antialiased=True)
+    plt.xticks(x, labels)
+    plt.xlabel('Experiment')
+    plt.ylabel('Cells (3 sq ft)')
+    plt.title('Cells with depressions for each experiment')
+    plt.savefig(depression_plot, dpi=150, transparent=True)
+    plt.close()
+
+    # plot distance
+    fig = plt.figure(frameon = False)
+    fig.set_size_inches(6, 8)
+    labels = ('Digital', 'Tangible')
+    x= range(len(labels))
+    y = distance
+    plt.bar(x, y, color="gray", width=0.5, align='center', alpha=0.5, antialiased=True)
+    plt.xticks(x, labels)
+    plt.xlabel('Experiment')
+    plt.ylabel('Distance (ft)')
+    plt.title('Distance of concentrated flow from reference for each experiment')
+    plt.savefig(distance_plot, dpi=150, figsize=(20,40), transparent=True)
+    plt.close()
+
 
 if __name__ == "__main__":
     atexit.register(cleanup)
