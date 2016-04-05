@@ -53,7 +53,7 @@ height = int(info.rows)
 
 
 def main():
-    analyze_models()
+    #analyze_models()
     cells, distance = analyze_series()
     plot_series(cells, distance)
     atexit.register(cleanup)
@@ -130,11 +130,14 @@ def analyze_series():
     cells = []
     distance = []
 
-    # compute number of cells with depressions in the reference
+    # compute percentage of cells with depressions in the reference
     univar_ref_cells = gscript.parse_command('r.univar', map="depressions@PERMANENT", separator='newline', flags='g')
-    reference_cells = float(univar_ref_cells['sum'])
-    cells.append(reference_cells)
-    print 'cells with depressions in reference: ' + str(reference_cells)
+    total_count = float(univar_ref_cells['cells'])
+    null_count = float(univar_ref_cells['null_cells'])
+    depression_count = total_count - null_count
+    reference_percent = depression_count/total_count*100
+    cells.append(reference_percent)
+    print 'percentage cells with depressions in reference: ' + str(reference_percent)
 
     for i in range(1, iterator):
 
@@ -253,16 +256,18 @@ def analyze_series():
         gscript.run_command('d.mon', stop=driver)
 
         # compute number of cells with depressions
-        univar = gscript.parse_command('r.univar', map=depressions_list, separator='newline', flags='g')
-        depression_cells = float(univar['sum'])
-        cells.append(depression_cells)
-        print 'cells with depressions in experiment'+str(i)+': ' + str(depression_cells)
+        univar = gscript.parse_command('r.univar', map=sum_depressions, separator='newline', flags='g')
+        nulls = float(univar['null_cells'])
+        depression_cells = total_count - nulls
+        depression_percent = depression_cells/total_count*100
+        cells.append(depression_percent)
+        print 'percent of cells with depressions in experiment '+str(i)+': ' + str(depression_percent)
 
     return cells, distance
 
 
 def plot_series(cells, distance):
-    """plot the number cells with depressions and the minumum distance of mean concentrated flow points from the reference for each experiment"""
+    """plot the percent of cells with depressions and the minumum distance of mean concentrated flow points from the reference for each experiment"""
 
     depression_plot = os.path.join(series, "depression_cells.png")
     distance_plot = os.path.join(series, "distance.png")
@@ -275,8 +280,8 @@ def plot_series(cells, distance):
     plt.bar(x, y, color="gray", width=0.5, align='center', alpha=0.5, antialiased=True)
     plt.xticks(x, labels)
     plt.xlabel('Experiment')
-    plt.ylabel('Cells (3 sq ft)')
-    # plt.title('Cells with depressions for each experiment')
+    plt.ylabel('Percent cells')
+    # plt.title('Percent of cells with depressions for each experiment')
     plt.savefig(depression_plot, dpi=300, transparent=True)
     plt.close()
 
@@ -288,7 +293,7 @@ def plot_series(cells, distance):
     plt.bar(x, y, color="gray", width=0.5, align='center', alpha=0.5, antialiased=True)
     plt.xticks(x, labels)
     plt.xlabel('Experiment')
-    plt.ylabel('Distance (ft)')
+    plt.ylabel('Cumulative distance (ft)')
     # plt.title('Sum of minimum distance of concentrated flow from reference for each experiment')
     plt.savefig(distance_plot, dpi=300, transparent=True)
     plt.close()
