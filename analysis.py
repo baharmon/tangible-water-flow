@@ -53,7 +53,7 @@ height = int(info.rows)
 
 
 def main():
-    #analyze_models()
+    analyze_models()
     cells, distance = analyze_series()
     plot_series(cells, distance)
     atexit.register(cleanup)
