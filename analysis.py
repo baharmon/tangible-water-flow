@@ -51,7 +51,6 @@ info = gscript.parse_command('r.info', map=region, flags='g')
 width = int(info.cols)+int(info.cols)/2
 height = int(info.rows)
 
-
 def main():
     #analyze_models()
     cells, distance = analyze_series()
