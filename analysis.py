@@ -243,7 +243,9 @@ def analyze_series():
         univar_distance = gscript.parse_command('v.db.univar', map=copied_points, column='distance', flags='g', overwrite=overwrite)
         dist = float(univar_distance['sum'])
         distance.append(dist)
-        print 'sum of min distance in experiment'+str(i)+': ' + str(dist)
+        print 'sum of min distance in experiment '+str(i)+': ' + str(dist)
+        mean_dist = float(univar_distance['mean'])
+        print 'mean of min distance in experiment '+str(i)+': ' + str(mean_dist)
 
         # render
         gscript.run_command('d.mon', start=driver, width=width*2, height=height*2, output=os.path.join(series,concentrated_flow+".png"), overwrite=overwrite)
