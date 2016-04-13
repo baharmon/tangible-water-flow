@@ -214,7 +214,8 @@ def analyze_series():
         gscript.run_command('d.mon', stop=driver)
 
         # compute maximum depressions
-        gscript.run_command('r.series', input=depressions_list, output=max_depressions, method="maximum", overwrite=overwrite)
+        gscript.run_command('r.series', input=depressions_list, 
+                            output=max_depressions, method="maximum", overwrite=overwrite)
         gscript.write_command('r.colors', map=max_depressions, rules='-', stdin=depressions_colors)
         gscript.run_command('d.mon', start=driver, width=width, height=height, output=os.path.join(series,max_depressions+".png"), overwrite=overwrite)
         gscript.run_command('d.shade', shade=reference_relief, color=max_depressions, brighten=75)
