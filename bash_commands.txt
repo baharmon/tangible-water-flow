@@ -1,0 +1,2 @@
+mogrify -format png *.tif
+mogrify -chop 0x100+0+0 -gravity North  *.png
