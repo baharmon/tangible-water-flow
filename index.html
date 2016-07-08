@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<!-- This is a generated file. Do not edit. -->
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Tangible Landscape</title>
+
+        <meta name="description" content="Tangible Landscape">
+        <meta name="author" content="Brendan Harmon">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/osgeorel_greyscale.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'css/print/pdf.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+
+        <style>
+        body {
+        /*background-color: #FFF !important;*/
+        /*
+          background-image: url("pictures/elevation-nagshead.gif");
+          background-repeat: no-repeat;
+          background-position: left bottom;*/
+        }
+        .reveal section img {
+            background: transparent;
+            border: 0;
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.15);
+        }
+        /* for standalone frame */
+        /*
+        iframe {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        */
+        /* display: inline; background-color: #002B36; padding: 0px; margin: 0px */
+        .rounded-corners {
+            border: 0px solid black;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+            -khtml-border-radius: 5px;
+            -webkit-border-radius: 5px;
+        }
+        a {
+            color: #444 !important;
+        }
+        a:hover {
+            color: #444 !important;
+            text-decoration: underline !important;
+        }
+        h1, h2, h3, h4, h5 {
+            text-transform: none !important;
+            /* word-break: keep-all; text-transform: none; font-size: 200%; line-height: 110%; font-weight: bold !important; */
+            /* color: #060 !important; */
+            /* color: #444 !important; */
+            -webkit-hyphens: none !important;
+            -moz-hyphens: none !important;
+            -ms-hyphens: none !important;
+            hyphens: none !important;
+            line-height: 110% !important;
+        }
+        .reveal .progress span {
+            background-color: #444 !important;
+        }
+        /* predefined element positioning */
+        .top {
+            /*position: relative;*/
+            top: 5%;
+            height: 45%; /* is the height even needed? */
+        }
+        .bottom {
+            height: 45%;
+        }
+        .ne {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            height: 45%;
+            width: 45%;
+        }
+        .nw {
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            height: 45%;
+            width: 45%;
+        }
+        .se {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            height: 45%;
+            width: 45%;
+        }
+        .sw {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            height: 45%;
+            width: 45%;
+        }
+
+        /* classes for sections with predefined elements */
+        /* using !important because, reveal styles are applied afterwards  */
+        .right, .textimg > img, .textimg > video, .textimg > iframe, .imgtext > p, .imgtext > ul, .imgtext > ol, .imgtext > div {
+            float: right;
+            text-align: left;
+            max-width: 47% !important;
+        }
+        .left, .imgtext > img, .imgtext > video, imgtext > iframe, .textimg > p, .textimg > ul, .textimg > ol, .textimg > div {
+            float: left;
+            text-align: left;
+            max-width: 47% !important;
+        }
+        li > ul, li > ol {
+            font-size: 85% !important;
+            line-height: 110% !important;
+        }
+        .small {
+            font-size: smaller !important;
+            color: gray;
+            margin: 0.1em !important;
+        }
+        .credit {
+            font-size: small !important;
+            color: gray;
+            margin: 0.1em !important;
+        }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+<section>
+<h3 style="color: #888"><a href="https://2016.foss4g-na.org/session/tangible-landscape">FOSS4G NA 2016</a></h3>
+<h1 style="margin-top: 0.5em">Tangible Landscape</h1>
+<h2 style="margin-top: 0.5em">Cognitively grasping the flow of water</h2>
+<h4>Brendan Harmon, Anna Petrasova, Vaclav Petras, Helena Mitasova, &amp; Ross Meentemeyer</h4>
+<img height="100px" style="margin-top: 2em" src="img/cgaBlack.png">
+</section>
+
+<!-- Tangible Landscape -->
+<section data-background="img/tangible_landscape.jpg">
+<h1 class="shadow">Tangible Landscape</h1>
+<h3 class="shadow">A tangible user interface powered by open source GIS</h3>
+<img height="150px" src="img/logo_black.png">
+</section>
+
+<!-- Near real time interaction -->
+<section>
+<h2>Tanigble interaction with GIS</h2>
+<video  data-autoplay width="90%" style="margin-top: 1em" controls>
+<source src="img/tl_dam.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<p>With Tangible Landscape you can hold a GIS in your hands - feeling the shape of the earth, sculpting its topography, and directing the flow of water.</p>
+</section>
+
+<!-- History -->
+<section>
+<h2>History</h2>
+<img height="250px" src="img/illuminating_clay.png">
+<img height="250px" src="img/tangeoms_2.jpg">
+<p>An evolution of <b>Illuminating Clay</b> and the <b>Tangible Geospatial Modeling System</b></p>
+<p style="font-size:0.75em"><a href="http://tmg-trackr.media.mit.edu/publishedmedia/Papers/249-Illuminating%20Clay%20A%20Tangible/Published/PDF">Piper, Ben, Carlo Ratti, and Hiroshi Ishii. 2002. “Illuminating Clay: A Tangible Interface with Potential GRASS Applications.” In Proceedings of the Open Source GIS - GRASS Users Conference 2002. Trento, Italy.</a></p>
+<p style="font-size:0.75em"><a href="http://baharmon.github.io/publications/tangible_geospatial_modeling.pdf">L. Tateosian, H. Mitasova, B. A. Harmon, B. Fogleman, K. Weaver, and R. S. Harmon, “TanGeoMS: tangible geospatial modeling system.,” IEEE Trans. Vis. Comput. Graph., vol. 16, no. 6, pp. 1605–12, 2010.</a></p>
+<p style="font-size:0.75em">Image source: <a href="http://tangible.media.mit.edu/project/illuminating-clay/">MIT Media Lab</a></p>
+</section>
+
+<!-- How it works -->
+<section>
+<h2>How-it-works</h2>
+<img style="margin-top: 1em" height="500px" src="img/system_schema.png">
+<p>Tangible Landscape couples a digital and a physical model through a continuous cycle of 3D scanning, geospatial modeling, and projection</p>
+</section>
+
+<!-- Features -->
+<section>
+<h2>Features</h2>
+<video  data-autoplay width="90%" style="margin-top: 1em" controls>
+<source src="img/tl_immersion.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<h4 style="margin-top: 1em">A collaborative environment for tangible freeform modeling, object detection, real-time geospatial analytics, 3D rendering, and immersion / VR</h4>
+</section>
+
+<!-- Science with Tangible Landscape -->
+<section>
+<h2>Intuitive scientific modeling with Tangible Landscape</h2>
+<img width="25%" src="img/subsurface_1.jpg">
+<img width="25%" src="img/subsurface_2.jpg">
+<img width="40.55%" src="img/subsurface_3.jpg">
+<p>Tangible Landscape is designed to enable a rapid iterative process of observation, hypothesizing, testing, and inference</p>
+</section>
+
+<!-- Experiment -->
+
+<!-- Research questions -->
+
+
+<!-- Design | Methods -->
+
+
+
+<!-- Results -->
+<section>
+<h2>Difference in water depth</h2>
+<img width="33%" src="img/results/render_3d/diff.png">
+<img width="33%" src="img/results/render_3d/mean_diff_1.png">
+<img width="33%" src="img/results/render_3d/mean_diff_2.png">
+<p>The difference between the reference water depth and <b>1.</b> itself, <b>2.</b> mean of digitally sculpted water depth, <b>3.</b> and the mean of tangibly sculpted water depth</p>
+</section>
+
+<!-- Conclusions -->
+
+
+<!-- Open source | open science-->
+<section>
+<h2>Open source</h2>
+<img width="10%" src="img/Octocat.png">
+<h4 style="margin-top: 1em">Fork us on GitHub</h4>
+<p><a href="https://github.com/baharmon/tangible-water-flow">Repository with experiment instructions, scripts, data, and results</a></p>
+<p><a href="https://github.com/ncsu-osgeorel/grass-tangible-landscape">Tangible Landscape plugin for GRASS GIS</a></p>
+<p><a href="https://github.com/ncsu-osgeorel/r.in.kinect">GRASS GIS module for importing data from Kinect v2</a></p>
+<p><a href="https://osf.io/w8nr6/">Tangible Landscape repository on Open Science Framework</a></p>
+</section>
+
+<!-- Future work -->
+
+
+<!-- Learn more -->
+
+
+<!-- Book -->
+<section>
+<h2>Further reading</h2>
+<img width="20%" src="img/tl_book_cover.png">
+<p>Read our <a href="http://www.springer.com/us/book/9783319257730">book</a> and give it a try</p>
+</section>
+<!-- This is a generated file. Do not edit. -->
+        </div>  <!-- slides -->
+
+    </div>  <!-- reveal -->
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                // Display controls in the bottom right corner
+                controls: false,
+
+                // Display a presentation progress bar
+                progress: true,
+
+                center: true,
+
+                // Display the page number of the current slide
+                slideNumber: false,
+
+                // Enable the slide overview mode
+                overview: true,
+
+                // Turns fragments on and off globally
+                fragments: true,
+
+                // The "normal" size of the presentation, aspect ratio will be preserved
+                // when the presentation is scaled to fit different resolutions. Can be
+                // specified using percentage units.
+                // width: 960,
+                // height: 700,
+
+                // Factor of the display size that should remain empty around the content
+                margin: 0.05,  // increase?
+
+                // Bounds for smallest/largest possible scale to apply to content
+                minScale: 0.5,
+                maxScale: 5.0,
+
+                theme: Reveal.getQueryHash().theme,  // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Push each slide change to the browser history
+                history: true,
+                // Enable keyboard shortcuts for navigation
+                keyboard: true,
+
+                // Vertical centering of slides
+                center: true,
+
+                // Enables touch navigation on devices with touch input
+                touch: true,
+
+                // Loop the presentation
+                loop: false,
+                // Flags if the presentation is running in an embedded mode,
+                // i.e. contained within a limited portion of the screen
+                embedded: false,
+
+                // Number of milliseconds between automatically proceeding to the
+                // next slide, disabled when set to 0, this value can be overwritten
+                // by using a data-autoslide attribute on your slides
+                autoSlide: 0,
+
+                // Stop auto-sliding after user input
+                autoSlideStoppable: true,
+
+                // Enable slide navigation via mouse wheel
+                mouseWheel: false,
+
+                // Hides the address bar on mobile devices
+                hideAddressBar: true,
+
+                // Opens links in an iframe preview overlay
+                previewLinks: false,
+
+                // Transition speed
+                transitionSpeed: 'default', // default/fast/slow
+
+                // Transition style for full page slide backgrounds
+                backgroundTransition: 'none', // default/none/slide/concave/convex/zoom
+
+                // Number of slides away from the current that are visible
+                viewDistance: 3,
+
+                // Parallax background image
+                //parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+                // Parallax background size
+                //parallaxBackgroundSize: '' // CSS syntax, e.g. "2100px 900px"
+
+                // Chalkboard plugin
+                chalkboard: {
+              		// optionally load pre-recorded chalkboard drawing from file
+              		src: "chalkboard.json",
+              	},
+              	dependencies: [
+              		// ...
+              		{ src: 'plugin/chalkboard/chalkboard.js' },
+              		// ...
+              	],
+              	keyboard: {
+              	    67: function() { RevealChalkboard.toggleNotesCanvas() },	// toggle notes canvas when 'c' is pressed
+              	    66: function() { RevealChalkboard.toggleChalkboard() },	// toggle chalkboard when 'b' is pressed
+              	    46: function() { RevealChalkboard.clear() },	// clear chalkboard when 'DEL' is pressed
+              	     8: function() { RevealChalkboard.reset() },	// reset chalkboard data on current slide when 'BACKSPACE' is pressed
+              	    68: function() { RevealChalkboard.download() },	// downlad recorded chalkboard drawing when 'd' is pressed
+              	},
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/math/math.js', async: true }
+                ],
+
+                math: {
+                    mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                    config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                }
+            });
+
+        </script>
+        <script type="text/javascript"
+    src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+    </body>
+</html>
